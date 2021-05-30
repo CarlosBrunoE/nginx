@@ -1,0 +1,30 @@
+http {
+   #En esta parte declaramos la distribucion de load balance entre nuestros servidores.
+   upstream allbackend {
+       server 127.0.0.1:81;
+       server 127.0.0.1:82;
+       server 127.0.0.1:83;
+   }	
+   upstream app1 {
+       server 127.0.0.1:81;
+   }
+
+   upstream app2 {
+       server 127.0.0.1:82;
+       server 127.0.0.1:83;
+   }
+server {
+        listen 80;
+        #Aqui especificamos que cuando vayan a la siguiente ruta los mande hacia la distribucion de LB mencionada.
+        location / {
+             proxy_pass http://allbackend/;
+        }
+        location /app1 {
+             proxy_pass http://app1/;
+        }
+        location /app2 {
+             proxy_pass http://app2/;
+        }
+}
+}
+events { }
